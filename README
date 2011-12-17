@@ -1,0 +1,15 @@
+Uber Connector provides multiple connectors for interfacing with different data-sources in .NET (written in C#) whilst using an interface to allow data-sources to be changed whilst leaving interacting code the same. This allows for e.g. content-management-systems and other applications to use different platforms and software whilst minimizing code-changes.
+
+Features:
+> Logging
+> Connect/disconnect
+> Change database
+> Queries
+-- Read
+-- Execute
+-- Scalar
+-- Count
+
+Third-party binaies are also included; versions:
+> MySQL		6.4.4.0
+> SQLite	3.7.9.0

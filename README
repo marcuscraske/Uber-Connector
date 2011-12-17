@@ -1,5 +1,14 @@
 Uber Connector provides multiple connectors for interfacing with different data-sources in .NET (written in C#) whilst using an interface to allow data-sources to be changed whilst leaving interacting code the same. This allows for e.g. content-management-systems and other applications to use different platforms and software whilst minimizing code-changes.
 
+Supported data-sources:
+> MySQL
+> SQLite
+> MSSQL (untested)
+
+Planned data-sources:
+> Postgres
+> Microsoft Jet
+
 Features:
 > Logging
 > Connect/disconnect

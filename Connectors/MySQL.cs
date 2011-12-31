@@ -256,6 +256,20 @@ namespace UberLib.Connector.Connectors
                 Command.ExecuteNonQuery();
             }
         }
+        public override bool CheckConnectionIsReady()
+        {
+            lock (_Raw_Connector)
+            {
+                try
+                {
+                    // Reopen the connector if it is not ready
+                    if (_Raw_Connector.State == ConnectionState.Closed || _Raw_Connector.State == ConnectionState.Broken)
+                        _Raw_Connector.Open();
+                    return true;
+                }
+                catch { return false; }
+            }
+        }
         #endregion
     }
 }

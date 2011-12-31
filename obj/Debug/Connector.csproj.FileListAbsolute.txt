@@ -11,3 +11,9 @@ C:\Dropbox\Projects\Projects\Connector\obj\Debug\ResolveAssemblyReference.cache
 C:\Dropbox\Projects\Projects\Connector\obj\Debug\Connector.dll
 C:\Dropbox\Projects\Projects\Connector\obj\Debug\Connector.pdb
 X:\Dropbox\Dropbox\Projects\Projects\Connector\bin\Debug\sqlite3.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Debug\sqlite3.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Debug\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Debug\Connector.pdb
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Debug\ResolveAssemblyReference.cache
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Debug\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Debug\Connector.pdb

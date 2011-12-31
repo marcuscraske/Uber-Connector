@@ -4,3 +4,9 @@ X:\Dropbox\Dropbox\Projects\Projects\Connector\bin\Release\MySql.Data.dll
 X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Release\ResolveAssemblyReference.cache
 X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Release\Connector.dll
 X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Release\Connector.pdb
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Release\sqlite3.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Release\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\Release\Connector.pdb
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Release\ResolveAssemblyReference.cache
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Release\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\Release\Connector.pdb

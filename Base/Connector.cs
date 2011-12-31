@@ -78,6 +78,11 @@ namespace UberLib.Connector
         /// </summary>
         /// <param name="query"></param>
         public virtual void Query_Execute(string query) { }
+        /// <summary>
+        /// Checks the connection is valid and ready for queries; this is meant for applications using Connectors over a prolonged amount of time.
+        /// </summary>
+        /// <returns>An indication if the connector is yet ready.</returns>
+        public virtual bool CheckConnectionIsReady() { return false; }
         #endregion
     }
 }

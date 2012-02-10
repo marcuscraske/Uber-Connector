@@ -1,0 +1,6 @@
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\x64\Release\sqlite3.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\x64\Release\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\bin\x64\Release\Connector.pdb
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\x64\Release\ResolveAssemblyReference.cache
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\x64\Release\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\obj\x64\Release\Connector.pdb

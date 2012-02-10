@@ -1,5 +1,0 @@
-X:\Dropbox\Dropbox\Projects\Projects\Connector\bin\Portable\Connector.dll
-X:\Dropbox\Dropbox\Projects\Projects\Connector\bin\Portable\Connector.pdb
-X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Portable\ResolveAssemblyReference.cache
-X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Portable\Connector.dll
-X:\Dropbox\Dropbox\Projects\Projects\Connector\obj\Portable\Connector.pdb

@@ -6,10 +6,10 @@ Supported data-sources:
 > MySQL
 > SQLite
 > MSSQL (untested and not recommended)
-> Postgres
 
 Possible future data-sources:
 > Microsoft Jet
+> Postgres
 
 Features:
 > Logging

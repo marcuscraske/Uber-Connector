@@ -5,12 +5,13 @@
  * An example of using MySQL with the Connector library.
  */
 
+// Standard imports
 using System;
 using System.Collections.Generic;
-using System.Text;
+
 // Import base Connector classes
 using UberLib.Connector;
-// Import Connector wrappers
+// Import Connector wrappers - for connecting to data-sources
 using UberLib.Connector.Connectors;
 
 namespace ExampleMySQL
@@ -25,10 +26,11 @@ namespace ExampleMySQL
             // Next we set the specific connection properties for this object;
             // these are also default settings and do not need to be specified
             // -- just an example of how-to though
-            connection.Settings_Host = "127.0.0.1";         // IP of host
-            connection.Settings_Port = 3306;                // Port of MySQL DB on host
-            connection.Settings_User = "root";              // Database username
-            connection.Settings_Pass = "";                  // Database password
+            connection.Settings_Host = "127.0.0.1";             // IP of host
+            connection.Settings_Port = 3306;                    // Port of MySQL DB on host
+            connection.Settings_Database = "name_of_database";  // Database name
+            connection.Settings_User = "root";                  // Database username
+            connection.Settings_Pass = "";                      // Database password
 
             // Next we connect to the data-source, which is a MySQL database in this scenario
             connection.Connect(); // This method is inherited from Connector class
@@ -46,7 +48,7 @@ namespace ExampleMySQL
             // In this scenario we're going to create a list of products from the database
             List<Product> products = new List<Product>();
             Product prodTemp;
-            // Go through each row in a query
+            // Go through each row in a query - this is very OOP
             foreach (ResultRow product in connection.Query_Read("SELECT * FROM products ORDER BY pid  ASC"))
             {
                 prodTemp = new Product();
@@ -59,6 +61,10 @@ namespace ExampleMySQL
                 // Add to list
                 products.Add(prodTemp);
             }
+
+            // We can now just print-out our products - this technique is useful for e.g. MVC
+            foreach (Product product in products)
+                Console.WriteLine(product.productID + "\t" + product.category + "\t" + product.title);
 
             // Disconnect data-source
             connection.Disconnect();

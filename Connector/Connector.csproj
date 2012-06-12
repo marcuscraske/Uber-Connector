@@ -23,13 +23,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Portable|AnyCPU'">
     <OutputPath>bin\Portable\</OutputPath>
@@ -112,6 +114,9 @@
     <Compile Include="Connectors\MSSQL.cs" />
     <Compile Include="Connectors\MySQL.cs" />
     <Compile Include="Connectors\SQLite.cs" />
+    <Compile Include="Exceptions\ConnectionFailureException.cs" />
+    <Compile Include="Exceptions\QueryExecuteException.cs" />
+    <Compile Include="Exceptions\QueryException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

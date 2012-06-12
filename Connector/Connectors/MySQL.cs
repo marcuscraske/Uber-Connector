@@ -1,6 +1,7 @@
 ﻿/*
- * Creative Commons Attribution-ShareAlike 3.0 unported
- * Connectors\MySQL.cs
+ * License:     Creative Commons Attribution-ShareAlike 3.0 unported
+ * File:        Connectors\MySQL.cs
+ * Authors:     limpygnome              limpygnome@gmail.com
  * 
  * Provides an interface for MySQL servers.
  */
@@ -9,13 +10,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace UberLib.Connector.Connectors
 {
     public class MySQL : Connector
     {
+        #region "Constants"
+        private const int BYTE_BUFFER_SIZE = 4098;
+        #endregion
+
         #region "Variables"
-        private MySqlConnection _Raw_Connector = new MySqlConnection();
+        private MySqlConnection _rawConnector = new MySqlConnection();
         private string _Settings_Host = "localhost";
         private int _Settings_Port = 3306;
         private string _Settings_User = "root";
@@ -45,11 +51,11 @@ namespace UberLib.Connector.Connectors
         {
             get
             {
-                return _Raw_Connector;
+                return _rawConnector;
             }
             set
             {
-                _Raw_Connector = value;
+                _rawConnector = value;
             }
         }
         public string Settings_Host
@@ -199,37 +205,85 @@ namespace UberLib.Connector.Connectors
         #region "Methods"
         public override void Connect()
         {
-            _Raw_Connector.ConnectionString = "Host=" + _Settings_Host + "; Port=" + _Settings_Port + "; Database=" + _Settings_Database + "; UID=" + _Settings_User + "; Password=" + _Settings_Pass + "; Pooling=" + _Settings_Pooling + "; " + (_Settings_Timeout_Command > 0 ? "Default Command Timeout=" + _Settings_Timeout_Command + "; " : "") + (_Settings_Timeout_Connection > 0 ? "Connection Timeout=" + _Settings_Timeout_Connection + "; " : "") + (_Settings_Pooling ? "Min Pool Size=" + _Settings_Pooling_Size_Min + "; Max Pool Size=" + _Settings_Pooling_Size_Max + "; " : "") + _Settings_ConnectionString;
-            _Raw_Connector.Open();
-            if (_Logging_Enabled) _Logging_Queries = new List<string>();
+            try
+            {
+                _rawConnector.ConnectionString = "Host=" + _Settings_Host + "; Port=" + _Settings_Port + "; Database=" + _Settings_Database + "; UID=" + _Settings_User + "; Password=" + _Settings_Pass + "; Pooling=" + _Settings_Pooling + "; " + (_Settings_Timeout_Command > 0 ? "Default Command Timeout=" + _Settings_Timeout_Command + "; " : "") + (_Settings_Timeout_Connection > 0 ? "Connection Timeout=" + _Settings_Timeout_Connection + "; " : "") + (_Settings_Pooling ? "Min Pool Size=" + _Settings_Pooling_Size_Min + "; Max Pool Size=" + _Settings_Pooling_Size_Max + "; " : "") + _Settings_ConnectionString;
+                _rawConnector.Open();
+                if (_Logging_Enabled) _Logging_Queries = new List<string>();
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectionFailureException("Failed to establish a connection using MySQL!", ex);
+            }
         }
         public override void Disconnect()
         {
-            _Raw_Connector.Close();
+            _rawConnector.Close();
         }
         public override void ChangeDatabase(string database)
         {
-            _Raw_Connector.ChangeDatabase(database);
+            _rawConnector.ChangeDatabase(database);
         }
         public override Result Query_Read(string query)
         {
-            lock (_Raw_Connector)
+            lock (_rawConnector)
             {
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
-                Result Result = new Result();
-                MySqlCommand Command = new MySqlCommand(query, _Raw_Connector);
-                MySqlDataReader Reader = Command.ExecuteReader();
-                ResultRow Row;
-                int t;
-                while (Reader.Read())
+                Result result = null;
+                MySqlCommand command = null;
+                MySqlDataReader reader = null;
+                byte[] buffer;
+                MemoryStream bufferMS = null;
+                int bufferOffset;
+                int bytesAvailable;
+                try
                 {
-                    Row = new ResultRow();
-                    for (t = 0; t < Reader.FieldCount; t++) Row.Columns.Add(Reader.GetName(t), Reader.GetValue(t).ToString());
-                    Result[-1] = Row;
+
+                    result = new Result();
+                    command = new MySqlCommand(query, _rawConnector);
+                    reader = command.ExecuteReader();
+                    ResultRow row;
+                    int t;
+                    while (reader.Read())
+                    {
+                        row = new ResultRow();
+                        for (t = 0; t < reader.FieldCount; t++)
+                        {
+                            row.Columns.Add(reader.GetName(t), reader.GetValue(t).ToString());
+                            if (reader.GetDataTypeName(t) == "BLOB") // Check if the column of the row is a byte-array, if so -> add to separate byte dictionary
+                            {
+                                try
+                                {
+                                    bufferMS = new MemoryStream();
+                                    bufferOffset = 0;
+                                    bytesAvailable = (int)reader.GetBytes(t, 0, null, 0, 0);
+                                    while (bufferOffset < bytesAvailable)
+                                    {
+                                        reader.GetBytes(t, bufferOffset, buffer = new byte[BYTE_BUFFER_SIZE], 0, BYTE_BUFFER_SIZE);
+                                        bufferMS.Write(buffer, 0, BYTE_BUFFER_SIZE);
+                                        bufferOffset += BYTE_BUFFER_SIZE;
+                                    }
+                                    bufferMS.Flush();
+                                    if (row.ColumnsByteArray == null) row.ColumnsByteArray = new Dictionary<string, byte[]>();
+                                    row.ColumnsByteArray.Add(reader.GetName(t), bufferMS.ToArray());
+                                }
+                                catch { }
+                                finally
+                                {
+                                    bufferMS.Dispose();
+                                }
+                            }
+                        }
+                        result[-1] = row;
+                    }
+                    reader.Close();
                 }
-                Reader.Close();
-                return Result;
+                catch(Exception ex)
+                {
+                    throw new QueryException("Failed to read query '" + query + "'!", ex);
+                }
+                return result;
             }
         }
         public override int Query_Count(string query)
@@ -238,33 +292,66 @@ namespace UberLib.Connector.Connectors
         }
         public override object Query_Scalar(string query)
         {
-            lock (_Raw_Connector)
+            lock (_rawConnector)
             {
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
-                MySqlCommand Command = new MySqlCommand(query, _Raw_Connector);
-                return Command.ExecuteScalar();
+                try
+                {
+                    MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    return command.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryException("Failed to read query '" + query + "'!", ex);
+                }
             }
         }
         public override void Query_Execute(string query)
         {
-            lock (_Raw_Connector)
+            lock (_rawConnector)
             {
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
-                MySqlCommand Command = new MySqlCommand(query, _Raw_Connector);
-                Command.ExecuteNonQuery();
+                try
+                {
+                    MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    command.ExecuteNonQuery();
+                }
+                catch(Exception ex)
+                {
+                    throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+                }
+            }
+        }
+        public override void Query_Execute_Parameters(string query, Dictionary<string, object> parameters)
+        {
+            lock (_rawConnector)
+            {
+                _Logging_Queries_Count++;
+                if (_Logging_Enabled) _Logging_Add_Entry(query);
+                try
+                {
+                    MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    foreach (KeyValuePair<string, object> key in parameters)
+                        command.Parameters.AddWithValue("@" + key.Key, key.Value);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+                }
             }
         }
         public override bool CheckConnectionIsReady()
         {
-            lock (_Raw_Connector)
+            lock (_rawConnector)
             {
                 try
                 {
                     // Reopen the connector if it is not ready
-                    if (_Raw_Connector.State == ConnectionState.Closed || _Raw_Connector.State == ConnectionState.Broken)
-                        _Raw_Connector.Open();
+                    if (_rawConnector.State == ConnectionState.Closed || _rawConnector.State == ConnectionState.Broken)
+                        _rawConnector.Open();
                     return true;
                 }
                 catch { return false; }

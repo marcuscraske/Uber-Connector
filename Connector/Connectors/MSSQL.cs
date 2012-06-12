@@ -1,6 +1,7 @@
 ﻿/*
- * Creative Commons Attribution-ShareAlike 3.0 unported
- * Connectors\MSSQL.cs
+ * License:     Creative Commons Attribution-ShareAlike 3.0 unported
+ * File:        Connectors\MSSQL.cs
+ * Authors:     limpygnome              limpygnome@gmail.com
  * 
  * Provides an interface for Microsoft SQL servers; this is untested and incomplete!!!!!!!!!!
  */

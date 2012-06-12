@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExampleMySQL")]
+[assembly: AssemblyTitle("ExampleMySQL - Über Connector")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
-[assembly: AssemblyProduct("ExampleMySQL")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2012")]
+[assembly: AssemblyCompany("ÜberMeat")]
+[assembly: AssemblyProduct("Über Connector")]
+[assembly: AssemblyCopyright("Creative Commons Attribution-ShareAlike 3.0 unported")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

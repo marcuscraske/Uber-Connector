@@ -5,10 +5,10 @@ Provides multiple connectors for interfacing with different data-sources in .NET
 Supported data-sources:
 > MySQL
 > SQLite
-> MSSQL (untested)
-
-Planned data-sources:
+> MSSQL (untested and not recommended)
 > Postgres
+
+Possible future data-sources:
 > Microsoft Jet
 
 Features:
@@ -20,13 +20,18 @@ Features:
 -- Execute
 -- Scalar
 -- Count
+> Custom exceptions implemented
 
 Third-party binaies are also included; versions:
 > MySQL		6.4.4.0
-> SQLite	3.7.9.0
+> SQLite	3.7.1.1
+> Npgsql	2.0.11.93
 
-To-do/current issues:
+To-do:
 > Add states and events.
+
+Issues:
+> MSSQL needs testing and completing
 
 Contributors:
 > Limpygnome		ubermeat.co.uk			limpygnome at gmail.com

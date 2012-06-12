@@ -1,0 +1,9 @@
+X:\Dropbox\Dropbox\Projects\Github\Uber-Connector\ExampleMySQL\obj\x86\Debug\ResolveAssemblyReference.cache
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\bin\Debug\sqlite3.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\bin\Debug\ExampleMySQL.exe
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\bin\Debug\ExampleMySQL.pdb
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\bin\Debug\Connector.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\bin\Debug\MySql.Data.dll
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\obj\x86\Debug\ResolveAssemblyReference.cache
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\obj\x86\Debug\ExampleMySQL.exe
+X:\Dropbox\Dropbox\Projects\Github\Uber Connector\ExampleMySQL\obj\x86\Debug\ExampleMySQL.pdb

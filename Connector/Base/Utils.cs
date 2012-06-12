@@ -1,6 +1,7 @@
 ﻿/*
- * Creative Commons Attribution-ShareAlike 3.0 unported
- * Base\Utils.cs
+ * License:     Creative Commons Attribution-ShareAlike 3.0 unported
+ * File:        Base\Utils.cs
+ * Authors:     limpygnome              limpygnome@gmail.com
  * 
  * Provides various utilities for escaping data etc.
  */
@@ -83,20 +84,20 @@ namespace UberLib.Connector
         private static string ch_eof = ((char)0x1a).ToString();
         private static string ch_eof_r = @"\z";
         private static string ch_dq = ((char)0x22).ToString();
-        private static string ch_dq_r = @"\""";
+        private static string ch_dq_r = @"""""";
         private static string ch_sq = ((char)0x27).ToString();
-        private static string ch_sq_r = @"\'";
+        private static string ch_sq_r = @"''";
         public static string Escape(string data)
         {
             return data
                 .Replace(ch_slash, ch_slash_r)  // Slashes
                 .Replace(ch_null, ch_null_r)    // Null
                 .Replace(ch_bs, ch_bs_r)        // Backspace
-                .Replace(ch_tab, ch_tab_r)      // Tab
-                .Replace(ch_lf, ch_lf_r)        // New-line
-                .Replace(ch_cr, ch_cr_r)        // Carriage-return
+                //.Replace(ch_tab, ch_tab_r)      // Tab
+                //.Replace(ch_lf, ch_lf_r)        // New-line
+                //.Replace(ch_cr, ch_cr_r)        // Carriage-return
                 .Replace(ch_eof, ch_eof_r)      // End-of-file
-                .Replace(ch_dq, ch_dq_r)        // Double-quotation
+                //.Replace(ch_dq, ch_dq_r)        // Double-quotation
                 .Replace(ch_sq, ch_sq_r);       // Single quotation
         }
         #endregion

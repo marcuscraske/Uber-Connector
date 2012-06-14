@@ -87,8 +87,8 @@ namespace UberLib.Connector
         private static string ch_dq_r = @"""""";
         private static string ch_sq = ((char)0x27).ToString();
         private static string ch_sq_r = @"''";
-        public static string ch_mla = "ʼ";
-        public static string ch_mla_r = @"\ʼ";
+        public static string ch_mla = ((char)'\u02BC').ToString();
+        public static string ch_mla_r = @"ʼʼ";
         public static string Escape(string data)
         {
             StringBuilder bufferData = new StringBuilder(data);
@@ -99,9 +99,9 @@ namespace UberLib.Connector
             bufferData.Replace(ch_lf, ch_lf_r);             // New-line
             bufferData.Replace(ch_cr, ch_cr_r);             // Carriage-return
             bufferData.Replace(ch_eof, ch_eof_r);           // End-of-file
-            bufferData.Replace(ch_dq, ch_dq);               // Double-quotation
+            bufferData.Replace(ch_dq, ch_dq_r);               // Double-quotation
             bufferData.Replace(ch_sq, ch_sq_r);             // Single-quotation
-            bufferData.Replace(ch_mla, ch_mla);             // Modifier-letter-apostrophe
+            bufferData.Replace(ch_mla, ch_mla_r);             // Modifier-letter-apostrophe
             return bufferData.ToString();
         }
         #endregion

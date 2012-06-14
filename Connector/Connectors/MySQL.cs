@@ -228,6 +228,7 @@ namespace UberLib.Connector.Connectors
         {
             lock (_rawConnector)
             {
+                CheckConnectionIsReady();
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
                 Result result = null;
@@ -294,6 +295,7 @@ namespace UberLib.Connector.Connectors
         {
             lock (_rawConnector)
             {
+                CheckConnectionIsReady();
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
                 try
@@ -311,6 +313,7 @@ namespace UberLib.Connector.Connectors
         {
             lock (_rawConnector)
             {
+                CheckConnectionIsReady();
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
                 try
@@ -328,6 +331,7 @@ namespace UberLib.Connector.Connectors
         {
             lock (_rawConnector)
             {
+                CheckConnectionIsReady();
                 _Logging_Queries_Count++;
                 if (_Logging_Enabled) _Logging_Add_Entry(query);
                 try

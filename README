@@ -35,3 +35,13 @@ Issues:
 
 Contributors:
 > Limpygnome		ubermeat.co.uk			limpygnome at gmail.com
+
+
+Change-log:
+v1.2.0.0:
+-	Added change-log.
+- 	Added connection-checking before any queries in-case of the connection being broken due to idling.
+- 	CRITICAL: discovered an SQL-injection vulnerability with modifier-letter-apostrophe character; this is a unicode character
+	and usually ignored (I believe)...and the MySQL escape documentation (http://dev.mysql.com/doc/refman/5.0/en/string-literals.html)
+	does not mention this character.
+-	Improved escaping method.

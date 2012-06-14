@@ -87,18 +87,22 @@ namespace UberLib.Connector
         private static string ch_dq_r = @"""""";
         private static string ch_sq = ((char)0x27).ToString();
         private static string ch_sq_r = @"''";
+        public static string ch_mla = "ʼ";
+        public static string ch_mla_r = @"\ʼ";
         public static string Escape(string data)
         {
-            return data
-                .Replace(ch_slash, ch_slash_r)  // Slashes
-                .Replace(ch_null, ch_null_r)    // Null
-                .Replace(ch_bs, ch_bs_r)        // Backspace
-                //.Replace(ch_tab, ch_tab_r)      // Tab
-                //.Replace(ch_lf, ch_lf_r)        // New-line
-                //.Replace(ch_cr, ch_cr_r)        // Carriage-return
-                .Replace(ch_eof, ch_eof_r)      // End-of-file
-                //.Replace(ch_dq, ch_dq_r)        // Double-quotation
-                .Replace(ch_sq, ch_sq_r);       // Single quotation
+            StringBuilder bufferData = new StringBuilder(data);
+            bufferData.Replace(ch_slash, ch_slash_r);       // Slash
+            bufferData.Replace(ch_null, ch_null_r);         // Null
+            bufferData.Replace(ch_bs, ch_bs_r);             // Backspace
+            bufferData.Replace(ch_tab, ch_tab_r);           // Tab
+            bufferData.Replace(ch_lf, ch_lf_r);             // New-line
+            bufferData.Replace(ch_cr, ch_cr_r);             // Carriage-return
+            bufferData.Replace(ch_eof, ch_eof_r);           // End-of-file
+            bufferData.Replace(ch_dq, ch_dq);               // Double-quotation
+            bufferData.Replace(ch_sq, ch_sq_r);             // Single-quotation
+            bufferData.Replace(ch_mla, ch_mla);             // Modifier-letter-apostrophe
+            return bufferData.ToString();
         }
         #endregion
     }

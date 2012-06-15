@@ -84,9 +84,9 @@ namespace UberLib.Connector
         private static string ch_eof = ((char)0x1a).ToString();
         private static string ch_eof_r = @"\z";
         private static string ch_dq = ((char)0x22).ToString();
-        private static string ch_dq_r = @"""""";
+        private static string ch_dq_r = @"\""";
         private static string ch_sq = ((char)0x27).ToString();
-        private static string ch_sq_r = @"''";
+        private static string ch_sq_r = @"\'";
         public static string ch_mla = ((char)'\u02BC').ToString();
         public static string ch_mla_r = @"ʼʼ";
         public static string Escape(string data)

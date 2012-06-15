@@ -243,6 +243,7 @@ namespace UberLib.Connector.Connectors
 
                     result = new Result();
                     command = new MySqlCommand(query, _rawConnector);
+                    command.CommandTimeout = _Settings_Timeout_Command;
                     reader = command.ExecuteReader();
                     ResultRow row;
                     int t;
@@ -301,6 +302,7 @@ namespace UberLib.Connector.Connectors
                 try
                 {
                     MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    command.CommandTimeout = _Settings_Timeout_Command;
                     return command.ExecuteScalar();
                 }
                 catch (Exception ex)
@@ -319,6 +321,7 @@ namespace UberLib.Connector.Connectors
                 try
                 {
                     MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    command.CommandTimeout = _Settings_Timeout_Command;
                     command.ExecuteNonQuery();
                 }
                 catch(Exception ex)
@@ -337,6 +340,7 @@ namespace UberLib.Connector.Connectors
                 try
                 {
                     MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    command.CommandTimeout = _Settings_Timeout_Command;
                     foreach (KeyValuePair<string, object> key in parameters)
                         command.Parameters.AddWithValue("@" + key.Key, key.Value);
                     command.ExecuteNonQuery();

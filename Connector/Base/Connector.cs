@@ -14,6 +14,41 @@ namespace UberLib.Connector
 {
     public class Connector
     {
+        #region "Enums"
+        public enum DataType
+        {
+            Binary,
+            Timestamp,
+            Time,
+            Date,
+            DateTime,
+            Year,
+            TinyBlob,
+            Blob,
+            MediumBlob,
+            LongBlob,
+            Int16,
+            Int24,
+            Int32,
+            Int64,
+            Byte,
+            Float,
+            Double,
+            UByte,
+            UInt16,
+            UInt24,
+            UInt32,
+            UInt64,
+            Decimal,
+            String,
+            Varchar,
+            Text,
+            TinyText,
+            MediumText,
+            LongText
+        }
+        #endregion
+
         #region "Logging"
         /*
          * Logging should always add to counter regardless of being enabled, however queries should only be logged if logging is enabled.
@@ -64,6 +99,13 @@ namespace UberLib.Connector
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
         /// <returns></returns>
         public virtual Result Query_Read(string query) { throw new NotImplementedException(); }
+        /// <summary>
+        /// Executes and reads a stored procedure.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <returns></returns>
+        public virtual Result Query_Read_StoredProcedure(string procedureName, Dictionary<string, string> inputParameters, Dictionary<string, DataType> outputParameters) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query and returns a count.
         /// </summary>

@@ -235,7 +235,7 @@ namespace UberLib.Connector.Connectors
                 MySqlCommand command = null;
                 MySqlDataReader reader = null;
                 byte[] buffer;
-                MemoryStream bufferMS = null;
+                MemoryStream bufferMS;
                 int bufferOffset;
                 int bytesAvailable;
                 try
@@ -255,9 +255,9 @@ namespace UberLib.Connector.Connectors
                             row.Columns.Add(reader.GetName(t), reader.GetValue(t).ToString());
                             if (reader.GetDataTypeName(t) == "BLOB") // Check if the column of the row is a byte-array, if so -> add to separate byte dictionary
                             {
+                                bufferMS = new MemoryStream();
                                 try
                                 {
-                                    bufferMS = new MemoryStream();
                                     bufferOffset = 0;
                                     bytesAvailable = (int)reader.GetBytes(t, 0, null, 0, 0);
                                     while (bufferOffset < bytesAvailable)
@@ -284,6 +284,193 @@ namespace UberLib.Connector.Connectors
                 catch(Exception ex)
                 {
                     throw new QueryException("Failed to read query '" + query + "'!", ex);
+                }
+                return result;
+            }
+        }
+        public override Result Query_Read_StoredProcedure(string procedureName, Dictionary<string, string> inputParameters, Dictionary<string, Connector.DataType> outputParameters)
+        {
+            lock (_rawConnector)
+            {
+                CheckConnectionIsReady();
+                _Logging_Queries_Count++;
+                if (_Logging_Enabled) _Logging_Add_Entry("Stored procedure : " + procedureName);
+                Result result;
+                MySqlCommand command;
+                MySqlDataReader reader;
+                byte[] buffer;
+                MemoryStream bufferMS;
+                int bufferOffset;
+                int bytesAvailable;
+                try
+                {
+
+                    result = new Result();
+                    command = new MySqlCommand(procedureName, _rawConnector);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = _Settings_Timeout_Command;
+                    // Add parameters
+                    foreach(KeyValuePair<string, string> inputs in inputParameters)
+                    {
+                        command.Parameters.Add("@" + inputs.Key, inputs.Value);
+                        command.Parameters["@" + inputs.Key].Direction = ParameterDirection.Input;
+                    }
+                    MySqlDbType type;
+                    foreach (KeyValuePair<string, Connector.DataType> outputs in outputParameters)
+                    {
+                        switch (outputs.Value)
+                        {
+                            case DataType.Binary:
+                                type = MySqlDbType.Binary;
+                                break;
+                            case DataType.Blob:
+                                type = MySqlDbType.Blob;
+                                break;
+                            case DataType.Byte:
+                                type = MySqlDbType.Byte;
+                                break;
+                            case DataType.Date:
+                                type = MySqlDbType.Date;
+                                break;
+                            case DataType.DateTime:
+                                type = MySqlDbType.DateTime;
+                                break;
+                            case DataType.Decimal:
+                                type = MySqlDbType.Decimal;
+                                break;
+                            case DataType.Double:
+                                type = MySqlDbType.Double;
+                                break;
+                            case DataType.Float:
+                                type = MySqlDbType.Float;
+                                break;
+                            case DataType.Int16:
+                                type = MySqlDbType.Int16;
+                                break;
+                            case DataType.Int24:
+                                type = MySqlDbType.Int24;
+                                break;
+                            case DataType.Int32:
+                                type = MySqlDbType.Int32;
+                                break;
+                            case DataType.Int64:
+                                type = MySqlDbType.Int64;
+                                break;
+                            case DataType.LongBlob:
+                                type = MySqlDbType.LongBlob;
+                                break;
+                            case DataType.LongText:
+                                type = MySqlDbType.LongText;
+                                break;
+                            case DataType.MediumBlob:
+                                type = MySqlDbType.MediumBlob;
+                                break;
+                            case DataType.MediumText:
+                                type = MySqlDbType.MediumText;
+                                break;
+                            case DataType.String:
+                                type = MySqlDbType.String;
+                                break;
+                            case DataType.Text:
+                                type = MySqlDbType.Text;
+                                break;
+                            case DataType.Time:
+                                type = MySqlDbType.Time;
+                                break;
+                            case DataType.Timestamp:
+                                type = MySqlDbType.Timestamp;
+                                break;
+                            case DataType.TinyBlob:
+                                type = MySqlDbType.TinyBlob;
+                                break;
+                            case DataType.TinyText:
+                                type = MySqlDbType.TinyText;
+                                break;
+                            case DataType.UByte:
+                                type = MySqlDbType.UByte;
+                                break;
+                            case DataType.UInt16:
+                                type = MySqlDbType.UInt16;
+                                break;
+                            case DataType.UInt24:
+                                type = MySqlDbType.UInt24;
+                                break;
+                            case DataType.UInt32:
+                                type = MySqlDbType.UInt32;
+                                break;
+                            case DataType.UInt64:
+                                type = MySqlDbType.UInt64;
+                                break;
+                            case DataType.Varchar:
+                                type = MySqlDbType.VarChar;
+                                break;
+                            case DataType.Year:
+                                type = MySqlDbType.Year;
+                                break;
+                            default:
+                                throw new Exception("Non-supported type provided for stored procedure!");
+                        }
+                        command.Parameters.Add("@" + outputs.Key, type);
+                        command.Parameters["@" + outputs.Key].Direction = ParameterDirection.Output;
+                    }
+                    // Begin reading
+                    reader = command.ExecuteReader();
+                    ResultRow row;
+                    int t;
+                    // Create result
+                    while (reader.Read())
+                    {
+                        row = new ResultRow();
+                        for (t = 0; t < reader.FieldCount; t++)
+                        {
+                            row.Columns.Add(reader.GetName(t), reader.GetValue(t).ToString());
+                            if (reader.GetDataTypeName(t) == "BLOB") // Check if the column of the row is a byte-array, if so -> add to separate byte dictionary
+                            {
+                                bufferMS = new MemoryStream();
+                                try
+                                {
+                                    bufferOffset = 0;
+                                    bytesAvailable = (int)reader.GetBytes(t, 0, null, 0, 0);
+                                    while (bufferOffset < bytesAvailable)
+                                    {
+                                        reader.GetBytes(t, bufferOffset, buffer = new byte[BYTE_BUFFER_SIZE], 0, BYTE_BUFFER_SIZE);
+                                        bufferMS.Write(buffer, 0, BYTE_BUFFER_SIZE);
+                                        bufferOffset += BYTE_BUFFER_SIZE;
+                                    }
+                                    bufferMS.Flush();
+                                    if (row.ColumnsByteArray == null) row.ColumnsByteArray = new Dictionary<string, byte[]>();
+                                    row.ColumnsByteArray.Add(reader.GetName(t), bufferMS.ToArray());
+                                }
+                                catch { }
+                                finally
+                                {
+                                    bufferMS.Dispose();
+                                }
+                            }
+                        }
+                        result[-1] = row;
+                    }
+                    reader.Close();
+                    // Check if we have any rows, else read the parameters into a row
+                    if (result.Rows.Count == 0)
+                    {
+                        row = new ResultRow();
+                        MySqlParameter param;
+                        for (int i = 0; i < command.Parameters.Count; i++)
+                        {
+                            param = command.Parameters[i];
+                            if (param.MySqlDbType == MySqlDbType.Blob)
+                                // Untested...
+                                row.ColumnsByteArray.Add(param.ParameterName.Substring(1), (byte[])param.Value);
+                            else
+                                row.Columns.Add(param.ParameterName.Substring(1), param.Value);
+                        }
+                        result.Rows.Add(row);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new QueryException("Failed to execute/read stored procedure '" + procedureName + "'!", ex);
                 }
                 return result;
             }

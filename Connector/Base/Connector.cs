@@ -125,12 +125,15 @@ namespace UberLib.Connector
         /// </summary>
         /// <param name="query"></param>
         /// <exception cref="UberLib.Connector.QueryExecuteException">Thrown when the query failes to be executed.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         public virtual void Query_Execute(string query) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query but replaces @Name in the query with the corresponding value for the key "Name" in the parameters dictionary.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
+        /// <exception cref="UberLib.Connector.QueryExecuteException">Thrown when the query failes to be executed.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         public virtual void Query_Execute_Parameters(string query, Dictionary<string, object> parameters) { throw new NotImplementedException(); }
         /// <summary>
         /// Checks the connection is valid and ready for queries; this is meant for applications using Connectors over a prolonged amount of time.

@@ -115,6 +115,7 @@
     <Compile Include="Connectors\MySQL.cs" />
     <Compile Include="Connectors\SQLite.cs" />
     <Compile Include="Exceptions\ConnectionFailureException.cs" />
+    <Compile Include="Exceptions\DuplicateEntryException.cs" />
     <Compile Include="Exceptions\QueryExecuteException.cs" />
     <Compile Include="Exceptions\QueryException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

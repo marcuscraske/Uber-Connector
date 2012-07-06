@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.IO;
@@ -513,7 +514,7 @@ namespace UberLib.Connector.Connectors
                 }
                 catch(Exception ex)
                 {
-                    throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+                    handleExecuteError(ref query, ex);
                 }
             }
         }
@@ -534,9 +535,18 @@ namespace UberLib.Connector.Connectors
                 }
                 catch (Exception ex)
                 {
-                    throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+                    handleExecuteError(ref query, ex);
                 }
             }
+        }
+        private void handleExecuteError(ref string query, Exception ex)
+        {
+            const string regexPattern = "Duplicate entry '(.*?)' for key '(.*?)'";
+            Match match = Regex.Match(ex.Message, regexPattern);
+            if (match == null || match.Groups.Count != 3)
+                throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+            else
+                throw new DuplicateEntryException(match.Groups[2].Value);
         }
         public override bool CheckConnectionIsReady()
         {

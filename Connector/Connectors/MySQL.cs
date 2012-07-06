@@ -284,7 +284,7 @@ namespace UberLib.Connector.Connectors
                 }
                 catch(Exception ex)
                 {
-                    throw new QueryException("Failed to read query '" + query + "'!", ex);
+                    handleQueryError(ref query, ex);
                 }
                 return result;
             }
@@ -495,7 +495,8 @@ namespace UberLib.Connector.Connectors
                 }
                 catch (Exception ex)
                 {
-                    throw new QueryException("Failed to read query '" + query + "'!", ex);
+                    handleQueryError(ref query, ex);
+                    return null;
                 }
             }
         }
@@ -545,6 +546,15 @@ namespace UberLib.Connector.Connectors
             Match match = Regex.Match(ex.Message, regexPattern);
             if (match == null || match.Groups.Count != 3)
                 throw new QueryExecuteException("Failed to execute query '" + query + "'!", ex);
+            else
+                throw new DuplicateEntryException(match.Groups[2].Value);
+        }
+        private void handleQueryError(ref string query, Exception ex)
+        {
+            const string regexPattern = "Duplicate entry '(.*?)' for key '(.*?)'";
+            Match match = Regex.Match(ex.Message, regexPattern);
+            if (match == null || match.Groups.Count != 3)
+                throw new QueryException("Failed to read query '" + query + "'!", ex);
             else
                 throw new DuplicateEntryException(match.Groups[2].Value);
         }

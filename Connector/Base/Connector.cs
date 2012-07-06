@@ -97,6 +97,7 @@ namespace UberLib.Connector
         /// </summary>
         /// <param name="query"></param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         /// <returns></returns>
         public virtual Result Query_Read(string query) { throw new NotImplementedException(); }
         /// <summary>
@@ -111,6 +112,7 @@ namespace UberLib.Connector
         /// </summary>
         /// <param name="query"></param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         /// <returns></returns>
         public virtual int Query_Count(string query) { throw new NotImplementedException(); }
         /// <summary>
@@ -118,6 +120,7 @@ namespace UberLib.Connector
         /// </summary>
         /// <param name="query"></param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         /// <returns></returns>
         public virtual object Query_Scalar(string query) { throw new NotImplementedException(); }
         /// <summary>

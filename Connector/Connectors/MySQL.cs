@@ -500,6 +500,28 @@ namespace UberLib.Connector.Connectors
                 }
             }
         }
+        public override object Query_Scalar_Parameters(string query, Dictionary<string, object> parameters)
+        {
+            lock (_rawConnector)
+            {
+                CheckConnectionIsReady();
+                _Logging_Queries_Count++;
+                if (_Logging_Enabled) _Logging_Add_Entry(query);
+                try
+                {
+                    MySqlCommand command = new MySqlCommand(query, _rawConnector);
+                    command.CommandTimeout = _Settings_Timeout_Command;
+                    foreach (KeyValuePair<string, object> key in parameters)
+                        command.Parameters.AddWithValue("@" + key.Key, key.Value);
+                    return command.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    handleExecuteError(ref query, ex);
+                    return null;
+                }
+            }
+        }
         public override void Query_Execute(string query)
         {
             lock (_rawConnector)

@@ -38,6 +38,8 @@ Contributors:
 
 
 Change-log:
+v1.5.0.0:
+-	Added Query_Scalar_Parameters.
 v1.4.0.0:
 -	Added and implemented DuplicateEntryException for MySQL.
 v1.3.0.0:

@@ -124,6 +124,14 @@ namespace UberLib.Connector
         /// <returns></returns>
         public virtual object Query_Scalar(string query) { throw new NotImplementedException(); }
         /// <summary>
+        /// Executes a query with parameters and returns a single-object.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
+        /// <returns></returns>
+        public virtual object Query_Scalar_Parameters(string query, Dictionary<string, object> parameters) { throw new NotImplementedException(); }
+        /// <summary>
         /// Executes a query without returning anything.
         /// </summary>
         /// <param name="query"></param>

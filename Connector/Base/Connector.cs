@@ -1,20 +1,43 @@
-﻿/*
- * License:     Creative Commons Attribution-ShareAlike 3.0 unported
- * File:        Base\Connector.cs
- * Authors:     limpygnome              limpygnome@gmail.com
+﻿/*                       ____               ____________
+ *                      |    |             |            |
+ *                      |    |             |    ________|
+ *                      |    |             |   |
+ *                      |    |             |   |    
+ *                      |    |             |   |    ____
+ *                      |    |             |   |   |    |
+ *                      |    |_______      |   |___|    |
+ *                      |            |  _  |            |
+ *                      |____________| |_| |____________|
+ *                        
+ *      Author(s):      limpygnome (Marcus Craske)              limpygnome@gmail.com
  * 
- * A shared interface used by each type of Connector.
+ *      License:        Creative Commons Attribution-ShareAlike 3.0 Unported
+ *                      http://creativecommons.org/licenses/by-sa/3.0/
+ * 
+ *      Path:           /Base/Core.cs
+ * 
+ *      Change-Log:
+ *                      2013-07-20      Code cleanup, minor improvements and new comment header.
+ * 
+ * *********************************************************************************************************************
+ * The base model used to represent a data-source and its core operations.
+ * *********************************************************************************************************************
  */
-
 using System;
 using System.Data;
 using System.Collections.Generic;
 
 namespace UberLib.Connector
 {
+    /// <summary>
+    /// The base model used to represent a data-source and its core operations.
+    /// </summary>
     public class Connector
     {
-        #region "Enums"
+        // Enums *******************************************************************************************************
+        /// <summary>
+        /// An enum to represent a univeral standard of data-types between the different connectors.
+        /// </summary>
         public enum DataType
         {
             Binary,
@@ -47,110 +70,137 @@ namespace UberLib.Connector
             MediumText,
             LongText
         }
-        #endregion
-
-        #region "Logging"
-        /*
-         * Logging should always add to counter regardless of being enabled, however queries should only be logged if logging is enabled.
-         */
-        internal bool _Logging_Enabled = false;
-        internal List<string> _Logging_Queries = null;
-        internal int _Logging_Queries_Count = 0;
-        internal void _Logging_Add_Entry(string query)
-        {
-            if (_Logging_Queries == null) _Logging_Queries = new List<string>();
-            _Logging_Queries.Add(query);
-        }
-        #endregion
-
-        #region "Properties"
-        public string[] Logging_Queries()
-        {
-            if (_Logging_Queries != null)
-                return _Logging_Queries.ToArray();
-            else return new string[]{ };
-        }
-        public int Logging_Queries_Count()
-        {
-            return _Logging_Queries_Count;
-        }
-        #endregion
-
-        #region "Methods"
+        // Fields - Logging ********************************************************************************************
+        internal bool           loggingEnabled = false;
+        internal List<string>   loggingQueries = null;
+        internal int            loggingQueriesCount = 0;
+        // Methods - Connection ****************************************************************************************
         /// <summary>
         /// Connects to the data-source.
         /// </summary>
         /// <exception cref="UberLib.Connector.ConnectionFailureException">Thrown when the connector fails to connect to the data-source.</exception>
-        /// <returns></returns>
-        public virtual void Connect() { throw new NotImplementedException(); }
+        public virtual void connect() { throw new NotImplementedException(); }
         /// <summary>
         /// Disconnects from the data-source.
         /// </summary>
-        public virtual void Disconnect() { throw new NotImplementedException(); }
+        public virtual void disconnect() { throw new NotImplementedException(); }
         /// <summary>
         /// Changes the current database being utilized.
         /// </summary>
-        /// <param name="database"></param>
-        public virtual void ChangeDatabase(string database) { throw new NotImplementedException(); }
+        /// <param name="database">The database to switch to.</param>
+        public virtual void changeDatabase(string database) { throw new NotImplementedException(); }
+        // Methods - Query Related *************************************************************************************
         /// <summary>
-        /// Executes a query consisting of possibly multiple rows and columns.
+        /// Executes and returns the result of tuples formed by the query.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">The query to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        /// <returns></returns>
-        public virtual Result Query_Read(string query) { throw new NotImplementedException(); }
+        /// <returns>Result from the query's execution.</returns>
+        public virtual Result queryRead(string query) { throw new NotImplementedException(); }
+        /// <summary>
+        /// Executes and returns the result of tuples formed by the query.
+        /// </summary>
+        /// <param name="statement">The prepared statement to be executed.</param>
+        /// <returns>Result from the query's execution.</returns>
+        public virtual Result queryRead(PreparedStatement statement) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes and reads a stored procedure.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="statement">The prepared statement with the input parameters and query as the procedure name.</param>
+        /// <param name="outputParameters">The output attributes (key) and data-types (value).</param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
-        /// <returns></returns>
-        public virtual Result Query_Read_StoredProcedure(string procedureName, Dictionary<string, string> inputParameters, Dictionary<string, DataType> outputParameters) { throw new NotImplementedException(); }
+        /// <returns>Result from the procedure's call.</returns>
+        public virtual Result queryReadStoredProcedure(PreparedStatement statement, Dictionary<string, DataType> outputParameters) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query and returns a count.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">The query to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        /// <returns></returns>
-        public virtual int Query_Count(string query) { throw new NotImplementedException(); }
+        /// <returns>The integer scalar result from the query.</returns>
+        public virtual int queryCount(string query) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query and returns a single-object.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">The query to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        /// <returns></returns>
-        public virtual object Query_Scalar(string query) { throw new NotImplementedException(); }
+        /// <returns>The scalar value of the query.</returns>
+        public virtual object queryScalar(string query) { throw new NotImplementedException(); }
         /// <summary>
-        /// Executes a query with parameters and returns a single-object.
+        /// Executes a prepared statement and returns a single-object.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">The prepared-statement to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        /// <returns></returns>
-        public virtual object Query_Scalar_Parameters(string query, Dictionary<string, object> parameters) { throw new NotImplementedException(); }
+        /// <returns>The scalar value of the query.</returns>
+        public virtual object queryScalar(PreparedStatement statement) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query without returning anything.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="query">The query to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryExecuteException">Thrown when the query failes to be executed.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        public virtual void Query_Execute(string query) { throw new NotImplementedException(); }
+        public virtual void queryExecute(string query) { throw new NotImplementedException(); }
         /// <summary>
-        /// Executes a query but replaces @Name in the query with the corresponding value for the key "Name" in the parameters dictionary.
+        /// Executes a prepared statement.
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="parameters"></param>
+        /// <param name="statement">The prepared-statement to be executed.</param>
         /// <exception cref="UberLib.Connector.QueryExecuteException">Thrown when the query failes to be executed.</exception>
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
-        public virtual void Query_Execute_Parameters(string query, Dictionary<string, object> parameters) { throw new NotImplementedException(); }
+        public virtual void queryExecute(PreparedStatement statement) { throw new NotImplementedException(); }
         /// <summary>
         /// Checks the connection is valid and ready for queries; this is meant for applications using Connectors over a prolonged amount of time.
         /// </summary>
         /// <returns>An indication if the connector is yet ready.</returns>
-        public virtual bool CheckConnectionIsReady() { throw new NotImplementedException(); }
-        #endregion
+        public virtual bool checkConnectionIsReady() { throw new NotImplementedException(); }
+        // Methods - Logging *******************************************************************************************
+        /// <summary>
+        /// Adds a new query to be logged; the query is not added if logging is not enabled.
+        /// </summary>
+        /// <param name="query">The query, as a string, to be logged.</param>
+        internal void loggingAddQuery(string query)
+        {
+            if (!loggingEnabled)
+                return;
+            if (loggingQueries == null)
+                loggingQueries = new List<string>();
+            loggingQueries.Add(query);
+        }
+        // Methods - Properties ****************************************************************************************
+        /// <summary>
+        /// The queries executed using this connector; returns an empty string array if logging is not enabled.
+        /// </summary>
+        public string[] LoggingQueries
+        {
+            get
+            {
+                if (loggingQueries != null)
+                    return loggingQueries.ToArray();
+                else return new string[] { };
+            }
+        }
+        /// <summary>
+        /// The number of queries executed using this connector; logging does not need to be enabled.
+        /// </summary>
+        public int LoggingQueriesCount
+        {
+            get
+            {
+                return loggingQueriesCount;
+            }
+        }
+        /// <summary>
+        /// Used to set/get if logging is enabled (true) or disabled (false); if logging is enabled, all queries
+        /// executed are logged as strings. If the query uses parameters, the values will not be recorded!
+        /// </summary>
+        public bool LoggingEnabled
+        {
+            get
+            {
+                return loggingEnabled;
+            }
+        }
     }
 }

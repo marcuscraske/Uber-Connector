@@ -109,11 +109,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Connector.cs" />
+    <Compile Include="Base\PreparedStatement.cs" />
     <Compile Include="Base\Result.cs" />
-    <Compile Include="Base\Utils.cs" />
-    <Compile Include="Connectors\MSSQL.cs" />
+    <Compile Include="Base\ResultRow.cs" />
+    <Compile Include="Base\SQLUtils.cs" />
     <Compile Include="Connectors\MySQL.cs" />
     <Compile Include="Connectors\SQLite.cs" />
+    <Compile Include="Exceptions\AttributeNotFoundException.cs" />
     <Compile Include="Exceptions\ConnectionFailureException.cs" />
     <Compile Include="Exceptions\DuplicateEntryException.cs" />
     <Compile Include="Exceptions\QueryExecuteException.cs" />

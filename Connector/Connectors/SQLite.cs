@@ -1,16 +1,35 @@
-﻿/*
- * License:     Creative Commons Attribution-ShareAlike 3.0 unported
- * File:        Connectors\SQLite.cs
- * Authors:     limpygnome              limpygnome@gmail.com
+﻿/*                       ____               ____________
+ *                      |    |             |            |
+ *                      |    |             |    ________|
+ *                      |    |             |   |
+ *                      |    |             |   |    
+ *                      |    |             |   |    ____
+ *                      |    |             |   |   |    |
+ *                      |    |_______      |   |___|    |
+ *                      |            |  _  |            |
+ *                      |____________| |_| |____________|
+ *                        
+ *      Author(s):      limpygnome (Marcus Craske)              limpygnome@gmail.com
  * 
- * Provides an interface for an SQLite database; credit goes to switch-on-the-code.com for an excellent
- * tutorial:
- * http://www.switchonthecode.com/tutorials/csharp-tutorial-writing-a-dotnet-wrapper-for-sqlite
+ *      License:        Creative Commons Attribution-ShareAlike 3.0 Unported
+ *                      http://creativecommons.org/licenses/by-sa/3.0/
  * 
- * Also used recommendations and help from:
- * http://www.hackchina.com/en/r/151107/Sqlite3.cs__html
+ *      Path:           /Connectors/SQLite.cs
+ * 
+ *      Change-Log:
+ *                      2013-07-20      Code cleanup, minor improvements and new comment header.
+ *                                      Added support for prepared-statements.
+ * 
+ * *********************************************************************************************************************
+ * A connector for interfacing with SQLite data-sources.
+ * 
+ * Credit due to the following:
+ * -    An excellent tutorial:
+ *      http://www.switchonthecode.com/tutorials/csharp-tutorial-writing-a-dotnet-wrapper-for-sqlite
+ *  -   Help with calling:
+ *      http://www.hackchina.com/en/r/151107/Sqlite3.cs__html
+ * *********************************************************************************************************************
  */
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,9 +37,12 @@ using System.Runtime.InteropServices;
 
 namespace UberLib.Connector.Connectors
 {
+    /// <summary>
+    /// A connector for interfacing with SQLite data-sources.
+    /// </summary>
     public class SQLite : Connector
     {
-        #region "Constants"
+        // Constants ***************************************************************************************************
         const int SQLITE_OK = 0;
         const int SQLITE_ROW = 100;
         const int SQLITE_DONE = 101;
@@ -28,15 +50,11 @@ namespace UberLib.Connector.Connectors
         const int SQLITE_FLOAT = 2;
         const int SQLITE_TEXT = 3;
         const int SQLITE_BUSY = 5;
-        #endregion
-
-        #region "Variables"
+        // Fields ******************************************************************************************************
         private IntPtr _dbp = IntPtr.Zero; // Pointer to the database
         private bool _sqlite_open = false; // Declares if the database is open
         private string _path = null; // The path of the database
-        #endregion
-
-        #region "Properties"
+        // Methods - Properties ****************************************************************************************
         /// <summary>
         /// Returns a boolean stating if a connection to the database/file has been made.
         /// </summary>
@@ -53,9 +71,8 @@ namespace UberLib.Connector.Connectors
             get
             { return _dbp; }
         }
-        #endregion
 
-        #region "External methods"
+        // Methods - External Library Points ***************************************************************************
         [DllImport("sqlite3.dll", EntryPoint = "sqlite3_open")]
         static extern int sqlite3_open(string filename, out IntPtr db);
 
@@ -94,40 +111,37 @@ namespace UberLib.Connector.Connectors
 
         [DllImport("sqlite3.dll", EntryPoint = "sqlite3_column_double")]
         static extern double sqlite3_column_double(IntPtr stmHandle, int iCol);
-        #endregion
-
-        #region "Methods"
-        #region "-- Connection"
-        public override void Connect()
+        // Methods - Implemented ***************************************************************************************
+        public override void connect()
         {
             if (sqlite3_open(_path, out _dbp) != SQLITE_OK)
                 throw new Exception("Failed to create or open database file, check the path is correct!");
             _sqlite_open = true;
         }
-        public override void Disconnect()
+        public override void disconnect()
         {
             if (_sqlite_open)
                 sqlite3_close(_dbp);
         }
-        #endregion
-        #region "-- Queries"
-        public override void Query_Execute(string query)
+        /// <summary>
+        /// Changes the database, which is a file in SQLite, used; this will automatically connect.
+        /// </summary>
+        /// <param name="file">The path of the file.</param>
+        public override void changeDatabase(string file)
         {
-            // Check a connection to the database is open
-            if (!_sqlite_open) throw new QueryExecuteException("The database has not been opened!");
-            IntPtr errorP = IntPtr.Zero;
-            // Wait for the query to finish executing
-            while (sqlite3_exec(_dbp, query, IntPtr.Zero, IntPtr.Zero, out errorP) == SQLITE_BUSY)
-                System.Threading.Thread.Sleep(10);
-            // Check no errors occurred
-            if (errorP != IntPtr.Zero)
-                throw new QueryExecuteException("Failed to execute query - " + Marshal.PtrToStringAnsi(errorP));
+            if (_sqlite_open)
+                disconnect();
+            _path = file;
+            connect();
         }
-        public override Result Query_Read(string query)
+        public override Result queryRead(string query)
         {
-            if (!_sqlite_open) throw new QueryException("The database has not been opened!");
-            _Logging_Queries_Count++;
-            if (_Logging_Enabled) _Logging_Add_Entry(query);
+            if (!_sqlite_open)
+                throw new QueryException("The database has not been opened!");
+            // Logging
+            loggingQueriesCount++;
+            loggingAddQuery(query);
+            // Read
             IntPtr sP = _sqlite_prepare(query, ref query);
             Result result = new Result();
             try
@@ -136,6 +150,7 @@ namespace UberLib.Connector.Connectors
                 // Get the column names
                 string[] columnNames = new string[columns];
                 for (int i = 0; i < columns; i++)
+                {
                     try
                     {
                         columnNames[i] = sqlite3_column_name(sP, i) ?? "invalid_null_column_name_" + i;
@@ -144,20 +159,32 @@ namespace UberLib.Connector.Connectors
                     {
                         columnNames[i] = "invalid_error_" + i;
                     }
+                }
                 // Add rows to result set
                 ResultRow row;
                 while (sqlite3_step(sP) == SQLITE_ROW) // Iterate through each row
                 {
                     row = new ResultRow();
                     for (int i = 0; i < columns; i++) // Iterate through each column
+                    {
                         switch (sqlite3_column_type(sP, i))
                         {
-                            case SQLITE_INTEGER: row.Columns.Add(columnNames[i], sqlite3_column_int(sP, i)); break;
-                            case SQLITE_TEXT: row.Columns.Add(columnNames[i], sqlite3_column_text(sP, i)); break;
-                            case SQLITE_FLOAT: row.Columns.Add(columnNames[i], sqlite3_column_double(sP, i)); break;
-                            default: row.Columns.Add(columnNames[i], null); break; // Unknown data-type
+                            case SQLITE_INTEGER:
+                                row.attributes.Add(columnNames[i], sqlite3_column_int(sP, i));
+                                break;
+                            case SQLITE_TEXT:
+                                row.attributes.Add(columnNames[i], sqlite3_column_text(sP, i));
+                                break;
+                            case SQLITE_FLOAT:
+                                row.attributes.Add(columnNames[i], sqlite3_column_double(sP, i));
+                                break;
+                            default: // Unhandled/unknown data-type
+                                row.attributes.Add(columnNames[i], null);
+                                break;
                         }
-                    result.Rows.Add(row); // Add row to result set
+                    }
+                    // Add row to result set
+                    result.tuples.Add(row);
                 }
             }
             catch (Exception ex)
@@ -170,11 +197,14 @@ namespace UberLib.Connector.Connectors
             }
             return result;
         }
-        public override int Query_Count(string query)
+        public override int queryCount(string query)
         {
-            if (!_sqlite_open) throw new QueryException("The database has not been opened!");
-            _Logging_Queries_Count++;
-            if (_Logging_Enabled) _Logging_Add_Entry(query);
+            if (!_sqlite_open)
+                throw new QueryException("The database has not been opened!");
+            // Logging
+            loggingQueriesCount++;
+            loggingAddQuery(query);
+            // Perform count of tuples
             IntPtr sP = _sqlite_prepare(query, ref query);
             int columns = sqlite3_column_count(sP);
             // Check there is only one column
@@ -198,15 +228,15 @@ namespace UberLib.Connector.Connectors
             _sqlite_finalize(sP);
             return num;
         }
-        public override object Query_Scalar(string query)
+        public override object queryScalar(string query)
         {
             if (!_sqlite_open) throw new QueryException("The database has not been opened!");
             string duplicateQuery = (string)query.Clone();
 
             object returnObject = null;
-            // Add to logging
-            _Logging_Queries_Count++;
-            if (_Logging_Enabled) _Logging_Add_Entry(query);
+            // Logging
+            loggingQueriesCount++;
+            loggingAddQuery(query);
             // Prepare statements and execute them until the remainder of the SQL reaches zero
             int loops = 0;
             string states = "";
@@ -237,24 +267,23 @@ namespace UberLib.Connector.Connectors
             // Return the object
             return returnObject;
         }
-        #endregion
-        /// <summary>
-        /// Changes the database, which is a file in SQLite, used; this will automatically connect.
-        /// </summary>
-        /// <param name="file"></param>
-        public override void ChangeDatabase(string file)
+        public override void queryExecute(string query)
         {
-            if (_sqlite_open)
-                Disconnect();
-            _path = file;
-            Connect();
+            // Check a connection to the database is open
+            if (!_sqlite_open)
+                throw new QueryExecuteException("The database has not been opened!");
+            IntPtr errorP = IntPtr.Zero;
+            // Wait for the query to finish executing
+            while (sqlite3_exec(_dbp, query, IntPtr.Zero, IntPtr.Zero, out errorP) == SQLITE_BUSY)
+                System.Threading.Thread.Sleep(1);
+            // Check no errors occurred
+            if (errorP != IntPtr.Zero)
+                throw new QueryExecuteException("Failed to execute query - " + Marshal.PtrToStringAnsi(errorP));
         }
         /// <summary>
         /// Prepares to execute an SQL statement.
         /// </summary>
-        /// <param name="query"></param>
         /// <param name="queryUncompiled">pzTail - a pointer to a duplicate query; when this statement is compiled, the uncompiled text i.e. a second statement is returned.</param>
-        /// <returns></returns>
         private IntPtr _sqlite_prepare(string query, ref string queryUncompiled)
         {
             IntPtr queryP;
@@ -268,7 +297,6 @@ namespace UberLib.Connector.Connectors
         /// <summary>
         /// Finalizes an SQL statement.
         /// </summary>
-        /// <param name="sP"></param>
         private void _sqlite_finalize(IntPtr sP)
         {
             int resultCode;
@@ -277,6 +305,5 @@ namespace UberLib.Connector.Connectors
             if (resultCode != SQLITE_OK)
                 throw new QueryException("Failed to finalize query, error: " + resultCode + "!");
         }
-        #endregion
     }
 }

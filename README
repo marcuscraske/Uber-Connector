@@ -1,43 +1,69 @@
 Uber Connector
-==============
-Provides multiple connectors for interfacing with different data-sources in .NET (written in C#) whilst using an interface to allow data-sources to be changed whilst leaving interacting code the same. This allows for e.g. content-management-systems and other applications to use different platforms and software whilst minimizing code-changes.
+***********************************************************************************
+About
+---------------------------------------------------------------------------------->
+A wrapper for using different data-sources in .NET (written in C#) using a single
+universal standard for data-types and parent connector object. This will allow
+applications to support multiple data-sources with minimal changes to the
+code-base.
 
 Supported data-sources:
 > MySQL
-> SQLite
-> MSSQL (untested and not recommended)
+> SQLite (partial)
 
-Possible future data-sources:
-> Microsoft Jet
-> Postgres
+Supported platforms:
+> Tested on Windows (XP/2003/7/8/2008)
+> Tested on Linux (Arch using Mono ~ http://www.mono-project.com)
 
 Features:
-> Logging
-> Connect/disconnect
-> Change database
-> Queries
--- Read
--- Execute
--- Scalar
--- Count
-> Custom exceptions implemented
+> Logging.
+> Connect/disconnect/check the connection is ready.
+> Change database.
+> Queries - read, execute, scalar and count.
+> Custom exceptions.
+> Prepared statements.
+> Binary data read/write.
+> SQLUtils class for escaping and other utility features.
 
-Third-party binaies are also included; versions:
-> MySQL		6.4.4.0
-> SQLite	3.7.1.1
-> Npgsql	2.0.11.93
+Third-Party Libraries
+---------------------------------------------------------------------------------->
+Title:		MySQL
+Version:	1.0.10.1
+URL:		http://dev.mysql.com/downloads/connector/net/
+Location:	/Connector/MySql.Data.dll
+License:	GNU General Public License, version 2
+			URL:	http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+			
+Title:		SQLite
+Version:	3.7.1.1
+URL:		http://www.sqlite.org/
+Location:	/Connector/sqlite3.dll
+License:	Public Domain
+			URL:	http://www.sqlite.org/copyright.html
+Note:		This file can be removed if unused; this library is not loaded at
+			runtime, only invoked.
 
-To-do:
-> Add states and events.
+Issues
+---------------------------------------------------------------------------------->
+> MSSQL needs implementing.
+> PostgreSQL needs implementing.
 
-Issues:
-> MSSQL needs testing and completing
+Authors
+---------------------------------------------------------------------------------->
+> Limpygnome		ubermeat.co.uk			limpygnome at gmail dot com
 
-Contributors:
-> Limpygnome		ubermeat.co.uk			limpygnome at gmail.com
+Build Change-Log
+---------------------------------------------------------------------------------->
+For actual code-changes, review the code files separately and refer to their
+header change-log.
 
-
-Change-log:
+v1.6.0.0:
+-	Added prepared statements, major code clean-up, minor improvements, removed MSSQL
+	(poor implementation, discontinued), comment headers updated to new standard,
+	README updated to new standard, updated MySQL connector library. The code-format
+	should be majorly improved, along with code documentation. Connection checking
+	on every single read/execute has also been removed, as this is not needed in most
+	cases and most likely just slows down processing time.
 v1.5.0.0:
 -	Added Query_Scalar_Parameters.
 v1.4.0.0:

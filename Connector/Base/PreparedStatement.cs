@@ -14,65 +14,79 @@
  *      License:        Creative Commons Attribution-ShareAlike 3.0 Unported
  *                      http://creativecommons.org/licenses/by-sa/3.0/
  * 
- *      Path:           /Base/Result.cs
+ *      Path:           /Base/PreparedStatement.cs
  * 
  *      Change-Log:
- *                      2013-07-20      Code cleanup, minor improvements and new comment header.
- *                                      Restricted set of properties to internal for security.
- *                                      Moved class ResultRow into a separate file (ResultRow.cs).
+ *                      2013-07-20      Initial class created.
  * 
  * *********************************************************************************************************************
- * A data-collection of result data returned by a query.
+ * Holds the collection of parameters used for a prepared statement.
  * *********************************************************************************************************************
  */
 using System;
 using System.Collections.Generic;
-using System.Collections;
+using System.Text;
 
 namespace UberLib.Connector
 {
     /// <summary>
-    /// A data-collection of result data returned by a query.
+    /// Holds the collection of parameters used for a prepared statement.
     /// </summary>
-    public class Result : IEnumerable
+    public class PreparedStatement
     {
         // Fields ******************************************************************************************************
-        internal List<ResultRow> tuples = new List<ResultRow>();
+        internal Dictionary<string, object> parameters;
+        internal string query;
         // Methods - Constructors
-        internal Result() { }
+        /// <summary>
+        /// Creates a new instance of a prepared statement.
+        /// 
+        /// Note: the query property will be null; this must be set!
+        /// </summary>
+        public PreparedStatement()
+        {
+            this.parameters = new Dictionary<string, object>();
+            this.query = null;
+        }
+        /// <summary>
+        /// Creates a new instance of a prepared statement.
+        /// </summary>
+        /// <param name="query">The query to be executed or the name of the procedure to be called.</param>
+        public PreparedStatement(string query)
+        {
+            this.parameters = new Dictionary<string, object>();
+            this.query = query;
+        }
         // Methods - Properties ****************************************************************************************
         /// <summary>
-        /// Fetches a tuple by its index.
+        /// The query of the prepared statement; this can also be the name of a procedure.
         /// </summary>
-        /// <param name="tupleIndex">The index of the tuple to be retrieved.</param>
-        /// <returns>The tuple at the specified index.</returns>
-        public ResultRow this[int tupleIndex]
+        public string Query
         {
             get
             {
-                return tuples[tupleIndex];
+                return query;
             }
-            internal set
+            set
             {
-                if (tupleIndex == -1)
-                    tuples.Add(value);
-                else
-                    tuples[tupleIndex] = value;
+                query = value;
             }
         }
         /// <summary>
-        /// Total number of tuples.
+        /// Gets/sets a parameter of the prepared statement.
         /// </summary>
-        public int Count
+        /// <param name="key">The name of the parameter, without @.</param>
+        /// <returns>The value of a parameter or null if it does not exist.</returns>
+        public object this[string key]
         {
             get
             {
-                return tuples.Count;
+                return parameters.ContainsKey(key) ? parameters[key] : null;
             }
-        }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return tuples.GetEnumerator();
+            set
+            {
+                parameters[key] = value;
+            }
         }
     }
 }

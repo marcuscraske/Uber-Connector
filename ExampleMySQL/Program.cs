@@ -26,14 +26,14 @@ namespace ExampleMySQL
             // Next we set the specific connection properties for this object;
             // these are also default settings and do not need to be specified
             // -- just an example of how-to though
-            connection.Settings_Host = "127.0.0.1";             // IP of host
-            connection.Settings_Port = 3306;                    // Port of MySQL DB on host
-            connection.Settings_Database = "name_of_database";  // Database name
-            connection.Settings_User = "root";                  // Database username
-            connection.Settings_Pass = "";                      // Database password
+            connection.SettingsHost = "127.0.0.1";             // IP of host
+            connection.SettingsPort = 3306;                    // Port of MySQL DB on host
+            connection.SettingsDatabase = "name_of_database";  // Database name
+            connection.SettingsUser = "root";                  // Database username
+            connection.SettingsPass = "";                      // Database password
 
             // Next we connect to the data-source, which is a MySQL database in this scenario
-            connection.Connect(); // This method is inherited from Connector class
+            connection.connect(); // This method is inherited from Connector class
 
             // We'll do an example query on the following table called "products":
             /*
@@ -49,11 +49,11 @@ namespace ExampleMySQL
             List<Product> products = new List<Product>();
             Product prodTemp;
             // Go through each row in a query - this is very OOP
-            foreach (ResultRow product in connection.Query_Read("SELECT * FROM products ORDER BY pid  ASC"))
+            foreach (ResultRow product in connection.queryRead("SELECT * FROM products ORDER BY pid  ASC"))
             {
                 prodTemp = new Product();
                 // Copy values
-                prodTemp.productID = (int)product.Get("pid");   // .Get(<column>) will always return
+                prodTemp.productID = product.get2<int>("pid");  // .Get(<column>) will always return
                                                                 // the .NET equiv. of the data-type
 
                 prodTemp.title = product["title"];              // [<value>] will always return string
@@ -67,7 +67,7 @@ namespace ExampleMySQL
                 Console.WriteLine(product.productID + "\t" + product.category + "\t" + product.title);
 
             // Disconnect data-source
-            connection.Disconnect();
+            connection.disconnect();
         }
     }
     public struct Product

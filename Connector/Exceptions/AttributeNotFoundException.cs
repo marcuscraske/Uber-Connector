@@ -14,13 +14,13 @@
  *      License:        Creative Commons Attribution-ShareAlike 3.0 Unported
  *                      http://creativecommons.org/licenses/by-sa/3.0/
  * 
- *      Path:           /Exceptions/QueryException.cs
+ *      Path:           /Exceptions/AttributeNotFoundException.cs
  * 
  *      Change-Log:
- *                      2013-07-20      Minor improvements, new code-format and clean-up.
+ *                      2013-07-20      Created initial class.
  * 
  * *********************************************************************************************************************
- * An exception thrown when an unknown exception occurs during a connector operation.
+ * An exception thrown when a specified attribute cannot be found.
  * *********************************************************************************************************************
  */
 using System;
@@ -29,15 +29,32 @@ using System.Runtime.Serialization;
 namespace UberLib.Connector
 {
     /// <summary>
-    /// An exception thrown when an unknown exception occurs during a connector operation.
+    /// An exception thrown when a specified attribute cannot be found.
     /// </summary>
     [Serializable]
-    public class QueryException : Exception
+    public class AttributeNotFoundException : Exception
     {
+        // Fields ******************************************************************************************************
+        private string attribute;
         // Methods - Constructors **************************************************************************************
-        public QueryException() : base() { }
-        public QueryException(string message) : base(message) { }
-        public QueryException(string message, Exception innerException) : base(message, innerException) { }
-        public QueryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public AttributeNotFoundException() : base() { }
+        public AttributeNotFoundException(string message) : base(message) { }
+        public AttributeNotFoundException(string message, string attribute) : base(message) { }
+        public AttributeNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        // Methods - Properties ****************************************************************************************
+        /// <summary>
+        /// The attribute identifier/key which could not be found.
+        /// </summary>
+        public string Attribute
+        {
+            get
+            {
+                return attribute;
+            }
+            internal set
+            {
+                attribute = value;
+            }
+        }
     }
 }

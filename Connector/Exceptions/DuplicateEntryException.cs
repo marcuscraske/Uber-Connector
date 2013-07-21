@@ -1,28 +1,56 @@
-﻿/*
- * License:     Creative Commons Attribution-ShareAlike 3.0 unported
- * File:        Exceptions\DuplicateEntryException.cs
- * Authors:     limpygnome              limpygnome@gmail.com
+﻿/*                       ____               ____________
+ *                      |    |             |            |
+ *                      |    |             |    ________|
+ *                      |    |             |   |
+ *                      |    |             |   |    
+ *                      |    |             |   |    ____
+ *                      |    |             |   |   |    |
+ *                      |    |_______      |   |___|    |
+ *                      |            |  _  |            |
+ *                      |____________| |_| |____________|
+ *                        
+ *      Author(s):      limpygnome (Marcus Craske)              limpygnome@gmail.com
  * 
- * Thrown when a duplicate piece of data is inserted into the database for a unique column.
+ *      License:        Creative Commons Attribution-ShareAlike 3.0 Unported
+ *                      http://creativecommons.org/licenses/by-sa/3.0/
+ * 
+ *      Path:           /Exceptions/DuplicateEntryException.cs
+ * 
+ *      Change-Log:
+ *                      2013-07-20      Minor improvements, new code-format and clean-up.
+ * 
+ * *********************************************************************************************************************
+ * An exception thrown when a tuple with a duplicate value is inserted into a database.
+ * *********************************************************************************************************************
  */
 using System;
 using System.Runtime.Serialization;
 
 namespace UberLib.Connector
 {
+    /// <summary>
+    /// An exception thrown when a tuple with a duplicate value is inserted into a database.
+    /// </summary>
     [Serializable]
     public class DuplicateEntryException : Exception
     {
-        private string column;
-        public DuplicateEntryException(string column) : base() { this.column = column; }
-        public DuplicateEntryException(string message, string column) : base(message) { this.column = column; }
-        public DuplicateEntryException(string message, Exception innerException, string column) : base(message, innerException) { this.column = column; }
-        public DuplicateEntryException(SerializationInfo info, StreamingContext context, string column) : base(info, context) { this.column = column; }
-        public string Column
+        // Fields ******************************************************************************************************
+        private string attribute;
+        // Methods - Constructors **************************************************************************************
+        public DuplicateEntryException(string attribute) : base() { this.attribute = attribute; }
+        public DuplicateEntryException(string message, string attribute) : base(message) { this.attribute = attribute; }
+        public DuplicateEntryException(string message, Exception innerException, string attribute) : base(message, innerException) { this.attribute = attribute; }
+        public DuplicateEntryException(SerializationInfo info, StreamingContext context, string attribute) : base(info, context) { this.attribute = attribute; }
+        // Methods - Properties ****************************************************************************************
+        public string Attribute
         {
             get
             {
-                return column;
+                return attribute;
+            }
+            internal set
+            {
+                attribute = value;
             }
         }
     }

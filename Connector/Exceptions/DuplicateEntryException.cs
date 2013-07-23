@@ -42,6 +42,9 @@ namespace UberLib.Connector
         public DuplicateEntryException(string message, Exception innerException, string attribute) : base(message, innerException) { this.attribute = attribute; }
         public DuplicateEntryException(SerializationInfo info, StreamingContext context, string attribute) : base(info, context) { this.attribute = attribute; }
         // Methods - Properties ****************************************************************************************
+        /// <summary>
+        /// The attribute which has a non-unique value.
+        /// </summary>
         public string Attribute
         {
             get

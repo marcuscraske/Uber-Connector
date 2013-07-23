@@ -421,6 +421,9 @@ namespace UberLib.Connector.Connectors
             }
         }
         // Methods - Properties ****************************************************************************************
+        /// <summary>
+        /// The string used for creating the connection to the MySQL server.
+        /// </summary>
         public string SettingsConnectionString
         {
             get
@@ -432,6 +435,9 @@ namespace UberLib.Connector.Connectors
                 settingsConnectionString = value;
             }
         }
+        /// <summary>
+        /// The raw MySQL API object used for interfacing with the DBMS.
+        /// </summary>
         public MySqlConnection RawConnector
         {
             get
@@ -443,6 +449,9 @@ namespace UberLib.Connector.Connectors
                 rawConnector = value;
             }
         }
+        /// <summary>
+        /// The host of the DBMS.
+        /// </summary>
         public string SettingsHost
         {
             get
@@ -455,6 +464,9 @@ namespace UberLib.Connector.Connectors
                 settingsHost = value;
             }
         }
+        /// <summary>
+        /// The port of the DBMS.
+        /// </summary>
         public int SettingsPort
         {
             get
@@ -468,6 +480,9 @@ namespace UberLib.Connector.Connectors
                 settingsPort = value;
             }
         }
+        /// <summary>
+        /// The username of the DBMS.
+        /// </summary>
         public string SettingsUser
         {
             get
@@ -479,6 +494,9 @@ namespace UberLib.Connector.Connectors
                 settingsUser = value;
             }
         }
+        /// <summary>
+        /// The password of the DBMS.
+        /// </summary>
         public string SettingsPass
         {
             get
@@ -490,6 +508,9 @@ namespace UberLib.Connector.Connectors
                 settingsPass = value;
             }
         }
+        /// <summary>
+        /// The database of the DBMS to use during the connection; can be switched.
+        /// </summary>
         public string SettingsDatabase
         {
             get
@@ -501,6 +522,9 @@ namespace UberLib.Connector.Connectors
                 settingsDatabase = value;
             }
         }
+        /// <summary>
+        /// The time, in seconds, for the connection to timeout.
+        /// </summary>
         public int SettingsTimeoutConnection
         {
             get
@@ -513,6 +537,9 @@ namespace UberLib.Connector.Connectors
                 settingsTimeoutConnection = value;
             }
         }
+        /// <summary>
+        /// Indicates if a connections pool should be created.
+        /// </summary>
         public bool SettingsPooling
         {
             get
@@ -524,6 +551,9 @@ namespace UberLib.Connector.Connectors
                 settingsPooling = value;
             }
         }
+        /// <summary>
+        /// The minimum number of connections in the connection pool.
+        /// </summary>
         public int SettingsPoolingSizeMin
         {
             get
@@ -536,6 +566,9 @@ namespace UberLib.Connector.Connectors
                 settingsPoolingSizeMin = value;
             }
         }
+        /// <summary>
+        /// The maximum number of connections in the connection pool.
+        /// </summary>
         public int SettingsPoolingSizeMax
         {
             get

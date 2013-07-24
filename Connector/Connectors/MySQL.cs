@@ -20,6 +20,7 @@
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
  *                                      Added support for prepared-statements.
  *                                      Merged commonly used code for reading into method 'queryReadInteral'.
+ *                      2013-07-24      Added null support.
  * 
  * *********************************************************************************************************************
  * A connector for interfacing with MySQL data-sources.
@@ -271,7 +272,7 @@ namespace UberLib.Connector.Connectors
                 row = new ResultRow();
                 for (t = 0; t < reader.FieldCount; t++)
                 {
-                    row.attributes.Add(reader.GetName(t), reader.GetValue(t));
+                    row.attributes.Add(reader.GetName(t), reader.IsDBNull(t) ? null : reader.GetValue(t));
                     // Check if the column of the row is a byte-array, if so -> add to separate byte dictionary
                     if (reader.GetDataTypeName(t) == "BLOB")
                     {

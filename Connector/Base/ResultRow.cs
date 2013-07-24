@@ -19,6 +19,7 @@
  *      Change-Log:
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
  *                                      Moved from Result.cs into a separate file.
+ *                      2013-07-24      Added null support.
  * 
  * *********************************************************************************************************************
  * A model for representing a result's tuple.
@@ -109,6 +110,15 @@ namespace UberLib.Connector
                 return new byte[] { };
             else
                 throw new AttributeNotFoundException("The attribute '" + attribute + "' is not in the query result!", attribute);
+        }
+        /// <summary>
+        /// Indicates if the value of an attribute is null.
+        /// </summary>
+        /// <param name="attribute">The key identifier/name of the attribute.</param>
+        /// <returns>True = null value, false = not a null value.</returns>
+        public bool isNull(string attribute)
+        {
+            return attributes[attribute] == null;
         }
     }
 }

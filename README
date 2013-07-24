@@ -57,6 +57,8 @@ Build Change-Log
 For actual code-changes, review the code files separately and refer to their
 header change-log.
 
+v1.6.0.1:
+-	Added better support for null values.
 v1.6.0.0:
 -	Added prepared statements, major code clean-up, minor improvements, removed MSSQL
 	(poor implementation, discontinued), comment headers updated to new standard,

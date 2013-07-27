@@ -60,6 +60,11 @@ namespace UberLib.Connector
         // Methods - Properties ****************************************************************************************
         /// <summary>
         /// The query of the prepared statement; this can also be the name of a procedure.
+        /// 
+        /// Parameters in the query should be marked with ?name where name is the name of the attribute/parameter.
+        /// 
+        /// E.g. for the attribute 'test':
+        /// INSERT INTO foo (test) VALUES(?test);
         /// </summary>
         public string Query
         {

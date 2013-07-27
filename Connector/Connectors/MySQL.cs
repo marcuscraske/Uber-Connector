@@ -86,7 +86,6 @@ namespace UberLib.Connector.Connectors
                 // Execute the query and read the result
                 try
                 {
-
                     Result result = new Result();
                     MySqlCommand command = new MySqlCommand(query, rawConnector);
                     queryReadInteral(ref result, ref command);
@@ -115,8 +114,8 @@ namespace UberLib.Connector.Connectors
                     // Add parameters
                     foreach (KeyValuePair<string, object> inputs in statement.parameters)
                     {
-                        command.Parameters.Add("@" + inputs.Key, inputs.Value.ToString());
-                        command.Parameters["@" + inputs.Key].Direction = ParameterDirection.Input;
+                        command.Parameters.Add("?" + inputs.Key, inputs.Value.ToString());
+                        command.Parameters["?" + inputs.Key].Direction = ParameterDirection.Input;
                     }
                     queryReadInteral(ref result, ref command);
                     return result;
@@ -143,8 +142,8 @@ namespace UberLib.Connector.Connectors
                     // Add parameters
                     foreach (KeyValuePair<string, object> inputs in statement.parameters)
                     {
-                        command.Parameters.Add("@" + inputs.Key, inputs.Value.ToString());
-                        command.Parameters["@" + inputs.Key].Direction = ParameterDirection.Input;
+                        command.Parameters.Add("?" + inputs.Key, inputs.Value.ToString());
+                        command.Parameters["?" + inputs.Key].Direction = ParameterDirection.Input;
                     }
                     // Add outputs
                     MySqlDbType type;
@@ -242,8 +241,8 @@ namespace UberLib.Connector.Connectors
                             default:
                                 throw new Exception("Non-supported type provided for stored procedure!");
                         }
-                        command.Parameters.Add("@" + outputs.Key, type);
-                        command.Parameters["@" + outputs.Key].Direction = ParameterDirection.Output;
+                        command.Parameters.Add("?" + outputs.Key, type);
+                        command.Parameters["?" + outputs.Key].Direction = ParameterDirection.Output;
                     }
                     // Read
                     queryReadInteral(ref result, ref command);
@@ -339,7 +338,7 @@ namespace UberLib.Connector.Connectors
                 {
                     MySqlCommand command = new MySqlCommand(statement.query, rawConnector);
                     foreach (KeyValuePair<string, object> key in statement.parameters)
-                        command.Parameters.Add("@" + key.Key, key.Value);
+                        command.Parameters.Add("?" + key.Key, key.Value);
                     return command.ExecuteScalar();
                 }
                 catch (Exception ex)
@@ -380,7 +379,7 @@ namespace UberLib.Connector.Connectors
                 {
                     MySqlCommand command = new MySqlCommand(statement.query, rawConnector);
                     foreach (KeyValuePair<string, object> key in statement.parameters)
-                        command.Parameters.Add("@" + key.Key, key.Value);
+                        command.Parameters.Add("?" + key.Key, key.Value);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)

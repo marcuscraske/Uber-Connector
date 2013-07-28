@@ -18,6 +18,8 @@
  * 
  *      Change-Log:
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
+ *                      2013-07-28      Class is now abstract, added connector type property and enum, added a few new
+ *                                      comments.
  * 
  * *********************************************************************************************************************
  * The base model used to represent a data-source and its core operations.
@@ -32,7 +34,7 @@ namespace UberLib.Connector
     /// <summary>
     /// The base model used to represent a data-source and its core operations.
     /// </summary>
-    public class Connector
+    public abstract class Connector
     {
         // Enums *******************************************************************************************************
         /// <summary>
@@ -70,10 +72,16 @@ namespace UberLib.Connector
             MediumText,
             LongText
         }
+        public enum ConnectorType
+        {
+            MySQL,
+            SQLite,
+            Unknown
+        }
         // Fields - Logging ********************************************************************************************
-        internal bool           loggingEnabled = false;
-        internal List<string>   loggingQueries = null;
-        internal int            loggingQueriesCount = 0;
+        internal bool           loggingEnabled = false;         // Indicates if logging is enabled.
+        internal List<string>   loggingQueries = null;          // A list of queries executed; logged when logging is enabled.
+        internal int            loggingQueriesCount = 0;        // The number of queries counted; this is always incremented regardless of logging being enabled.
         // Methods - Connection ****************************************************************************************
         /// <summary>
         /// Connects to the data-source.
@@ -200,6 +208,16 @@ namespace UberLib.Connector
             get
             {
                 return loggingEnabled;
+            }
+        }
+        /// <summary>
+        /// The type of connector.
+        /// </summary>
+        public virtual ConnectorType Type
+        {
+            get
+            {
+                return ConnectorType.Unknown;
             }
         }
     }

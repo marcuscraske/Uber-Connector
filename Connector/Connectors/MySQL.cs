@@ -21,6 +21,7 @@
  *                                      Added support for prepared-statements.
  *                                      Merged commonly used code for reading into method 'queryReadInteral'.
  *                      2013-07-24      Added null support.
+ *                      2013-07-28      Added property 'Type' override.
  * 
  * *********************************************************************************************************************
  * A connector for interfacing with MySQL data-sources.
@@ -579,6 +580,14 @@ namespace UberLib.Connector.Connectors
             {
                 if (value < 0) throw new Exception("Value cannot be less than zero!");
                 settingsPoolingSizeMax = value;
+            }
+        }
+        // Methods - Properties - Overrides ****************************************************************************
+        public override ConnectorType Type
+        {
+            get
+            {
+                return ConnectorType.MySQL;
             }
         }
     }

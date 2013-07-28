@@ -19,6 +19,7 @@
  *      Change-Log:
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
  *                                      Added support for prepared-statements.
+ *                      2013-07-28      Added property 'Type' override.
  * 
  * *********************************************************************************************************************
  * A connector for interfacing with SQLite data-sources.
@@ -304,6 +305,14 @@ namespace UberLib.Connector.Connectors
                 System.Threading.Thread.Sleep(10);
             if (resultCode != SQLITE_OK)
                 throw new QueryException("Failed to finalize query, error: " + resultCode + "!");
+        }
+        // Methods - Properties - Overrides ****************************************************************************
+        public override ConnectorType Type
+        {
+            get
+            {
+                return ConnectorType.SQLite;
+            }
         }
     }
 }

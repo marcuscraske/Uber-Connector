@@ -18,6 +18,7 @@
  * 
  *      Change-Log:
  *                      2013-07-20      Initial class created.
+ *                      2013-07-29      Added Parameters property.
  * 
  * *********************************************************************************************************************
  * Holds the collection of parameters used for a prepared statement.
@@ -91,6 +92,20 @@ namespace UberLib.Connector
             set
             {
                 parameters[key] = value;
+            }
+        }
+        /// <summary>
+        /// Gets/sets the internal parameter storage.
+        /// </summary>
+        public Dictionary<string, object> Parameters
+        {
+            get
+            {
+                return this.parameters;
+            }
+            set
+            {
+                this.parameters = value;
             }
         }
     }

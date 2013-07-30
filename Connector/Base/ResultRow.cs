@@ -20,6 +20,8 @@
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
  *                                      Moved from Result.cs into a separate file.
  *                      2013-07-24      Added null support.
+ *                      2013-07-30      Modified security modifiers of internal fields, added byte array property and
+ *                                      method to check if an attribute has a byte-array.
  * 
  * *********************************************************************************************************************
  * A model for representing a result's tuple.
@@ -40,11 +42,11 @@ namespace UberLib.Connector
         /// <summary>
         /// Stores the values of the tuple, associated with their attribute name.
         /// </summary>
-        public Dictionary<string, object> attributes;
+        internal Dictionary<string, object> attributes;
         /// <summary>
         /// Similar to columns field, but for binary data (blob).
         /// </summary>
-        public Dictionary<string, byte[]> attributesByteArray;
+        internal Dictionary<string, byte[]> attributesByteArray;
         // Methods - Constructors **************************************************************************************
         public ResultRow()
         {
@@ -69,6 +71,26 @@ namespace UberLib.Connector
             internal set
             {
                 attributes[attribute] = value;
+            }
+        }
+        /// <summary>
+        /// A list of attributes for the current tuple.
+        /// </summary>
+        public Dictionary<string, object> Attributes
+        {
+            get
+            {
+                return attributes;
+            }
+        }
+        /// <summary>
+        /// A list of attributes with byte data for the current tuple; may be null.
+        /// </summary>
+        public Dictionary<string, byte[]> AttributesBytes
+        {
+            get
+            {
+                return attributesByteArray;
             }
         }
         // Methods - Accessors *****************************************************************************************
@@ -119,6 +141,15 @@ namespace UberLib.Connector
         public bool isNull(string attribute)
         {
             return attributes[attribute] == null;
+        }
+        /// <summary>
+        /// Indicates if an attribute contains a byte-array value/is present in the internal byte-array list.
+        /// </summary>
+        /// <param name="attribute">The name of the field/attribute.</param>
+        /// <returns>True if present, otherwise false.</returns>
+        public bool isByteArray(string attribute)
+        {
+            return attributesByteArray != null && attributesByteArray.ContainsKey(attribute);
         }
     }
 }

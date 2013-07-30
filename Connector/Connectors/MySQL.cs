@@ -113,10 +113,12 @@ namespace UberLib.Connector.Connectors
                     Result result = new Result();
                     MySqlCommand command = new MySqlCommand(statement.query, rawConnector);
                     // Add parameters
+                    string t;
                     foreach (KeyValuePair<string, object> inputs in statement.parameters)
                     {
-                        command.Parameters.Add("?" + inputs.Key, inputs.Value.ToString());
-                        command.Parameters["?" + inputs.Key].Direction = ParameterDirection.Input;
+                        t = "?" + inputs.Key;
+                        command.Parameters.Add(t, inputs.Value);
+                        command.Parameters[t].Direction = ParameterDirection.Input;
                     }
                     queryReadInteral(ref result, ref command);
                     return result;
@@ -141,10 +143,12 @@ namespace UberLib.Connector.Connectors
                     Result result = new Result();
                     MySqlCommand command = new MySqlCommand(statement.query, rawConnector);
                     // Add parameters
+                    string t;
                     foreach (KeyValuePair<string, object> inputs in statement.parameters)
                     {
-                        command.Parameters.Add("?" + inputs.Key, inputs.Value.ToString());
-                        command.Parameters["?" + inputs.Key].Direction = ParameterDirection.Input;
+                        t = "?" + inputs.Key;
+                        command.Parameters.Add(t, inputs.Value);
+                        command.Parameters[t].Direction = ParameterDirection.Input;
                     }
                     // Add outputs
                     MySqlDbType type;
@@ -242,8 +246,9 @@ namespace UberLib.Connector.Connectors
                             default:
                                 throw new Exception("Non-supported type provided for stored procedure!");
                         }
-                        command.Parameters.Add("?" + outputs.Key, type);
-                        command.Parameters["?" + outputs.Key].Direction = ParameterDirection.Output;
+                        t = "?" + outputs.Key;
+                        command.Parameters.Add(t, type);
+                        command.Parameters[t].Direction = ParameterDirection.Output;
                     }
                     // Read
                     queryReadInteral(ref result, ref command);
@@ -274,7 +279,8 @@ namespace UberLib.Connector.Connectors
                 {
                     row.attributes.Add(reader.GetName(t), reader.IsDBNull(t) ? null : reader.GetValue(t));
                     // Check if the column of the row is a byte-array, if so -> add to separate byte dictionary
-                    if (reader.GetDataTypeName(t) == "BLOB")
+                    string dt = reader.GetDataTypeName(t);
+                    if (dt == "BLOB" || dt == "TINYBLOB" || dt == "MEDIUMBLOB" || dt == "LONGBLOB")
                     {
                         bufferMS = new MemoryStream();
                         try

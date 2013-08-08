@@ -22,6 +22,7 @@
  *                      2013-07-24      Added null support.
  *                      2013-07-30      Modified security modifiers of internal fields, added byte array property and
  *                                      method to check if an attribute has a byte-array.
+ *                      2013-08-08      Added contains method.
  * 
  * *********************************************************************************************************************
  * A model for representing a result's tuple.
@@ -150,6 +151,15 @@ namespace UberLib.Connector
         public bool isByteArray(string attribute)
         {
             return attributesByteArray != null && attributesByteArray.ContainsKey(attribute);
+        }
+        /// <summary>
+        /// Indicates if the tuple/row contains an attribute.
+        /// </summary>
+        /// <param name="attribute">The name of the attribute.</param>
+        /// <returns>True if exists, false if it does not exist.</returns>
+        public bool contains(string attribute)
+        {
+            return attributes.ContainsKey(attribute);
         }
     }
 }

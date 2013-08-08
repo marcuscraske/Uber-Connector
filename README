@@ -57,6 +57,8 @@ Build Change-Log
 For actual code-changes, review the code files separately and refer to their
 header change-log.
 
+v1.6.4.0:
+-	Added contains method to ResultRow (very minor addition).
 v1.6.3.0:
 -	Better handling of MySQL parameters.
 -	Added more class/modifier security to ResultRow.

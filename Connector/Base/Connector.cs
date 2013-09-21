@@ -20,6 +20,7 @@
  *                      2013-07-20      Code cleanup, minor improvements and new comment header.
  *                      2013-07-28      Class is now abstract, added connector type property and enum, added a few new
  *                                      comments.
+ *                      2013-09-21      Added queryCount prepared statement support.
  * 
  * *********************************************************************************************************************
  * The base model used to represent a data-source and its core operations.
@@ -128,6 +129,14 @@ namespace UberLib.Connector
         /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
         /// <returns>The integer scalar result from the query.</returns>
         public virtual int queryCount(string query) { throw new NotImplementedException(); }
+        /// <summary>
+        /// Executes a query and returns a count.
+        /// </summary>
+        /// <param name="statement">The prepared statement to be executed.</param>
+        /// <exception cref="UberLib.Connector.QueryException">Thrown when the query failes to be read.</exception>
+        /// <exception cref="UberLib.Connector.DuplicateEntryException">Thrown when a duplicate value for a column is inserted.</exception>
+        /// <returns>The integer scalar result from the query.</returns>
+        public virtual int queryCount(PreparedStatement statement) { throw new NotImplementedException(); }
         /// <summary>
         /// Executes a query and returns a single-object.
         /// </summary>

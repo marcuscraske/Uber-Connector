@@ -22,6 +22,7 @@
  *                                      Merged commonly used code for reading into method 'queryReadInteral'.
  *                      2013-07-24      Added null support.
  *                      2013-07-28      Added property 'Type' override.
+ *                      2013-09-21      Added queryCount prepared statement support.
  * 
  * *********************************************************************************************************************
  * A connector for interfacing with MySQL data-sources.
@@ -312,6 +313,10 @@ namespace UberLib.Connector.Connectors
         public override int queryCount(string query)
         {
             return int.Parse((queryScalar(query) ?? 0).ToString());
+        }
+        public override int queryCount(PreparedStatement statement)
+        {
+            return int.Parse((queryScalar(statement) ?? 0).ToString());
         }
         public override object queryScalar(string query)
         {
